@@ -690,7 +690,7 @@ open class AndroidXMultiplatformExtension(val project: Project) {
         }
     }
 
-    private fun KotlinJsTargetDsl.configureKotlinJsTests(project: Project) {
+    private fun KotlinJsTargetDsl.configureBrowserForTests(project: Project) {
         browser {
             testTask {
                 it.useKarma {
