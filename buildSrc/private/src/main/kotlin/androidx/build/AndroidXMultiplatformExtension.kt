@@ -749,6 +749,9 @@ private fun Project.configureWasm() {
 }
 
 private fun Project.configureNode() {
+    if (ProjectLayoutType.isPlayground(this)) {
+        return
+    }
     rootProject.extensions.findByType<NodeJsRootExtension>()?.let {
         it.version = getVersionByName("node")
         it.downloadBaseUrl =
