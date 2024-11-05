@@ -763,6 +763,9 @@ private fun Project.configureNode() {
 }
 
 private fun Project.configureKotlinJsTests() {
+    if (System.getenv("CHROME_BIN") != null) {
+        return
+    }
     val unzipChromeBuildServiceProvider =
         gradle.sharedServices.registrations.getByName("unzipChrome").service
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->

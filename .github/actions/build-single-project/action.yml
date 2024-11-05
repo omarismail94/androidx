@@ -47,6 +47,18 @@ runs:
         set -x
         echo "DIST_DIR=$HOME/dist" >> $GITHUB_ENV
 
+    - name: "Download Chrome"
+      uses: browser-actions/setup-chrome@v1
+      id: setup-chrome
+      with:
+        chrome-version: 'stable'
+        install-dependencies: true
+    - name: "Set CHROME_BIN environment variable"
+      shell: bash
+      run: |
+        set -x
+        echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+
     - name: "Setup Gradle"
       uses: gradle/gradle-build-action@v3-beta
       with:
