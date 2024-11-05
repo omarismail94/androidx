@@ -749,19 +749,23 @@ private fun Project.configureWasm() {
 }
 
 private fun Project.configureNode() {
-    if (ProjectLayoutType.isPlayground(this)) {
-        return
-    }
-    rootProject.extensions.findByType<NodeJsRootExtension>()?.let {
-        it.version = getVersionByName("node")
-        it.downloadBaseUrl =
-            File(project.getPrebuiltsRoot(), "androidx/external/org/nodejs/node").toURI().toString()
+    rootProject.extensions.findByType<NodeJsRootExtension>()?.let { nodeJs ->
+        nodeJs.version = getVersionByName("node")
+        if (!ProjectLayoutType.isPlayground(this)) {
+            nodeJs.downloadBaseUrl =
+                File(project.getPrebuiltsRoot(), "androidx/external/org/nodejs/node")
+                    .toURI()
+                    .toString()
+        }
     }
 
-    rootProject.extensions.findByType(YarnRootExtension::class.java)?.let {
-        it.version = getVersionByName("yarn")
-        it.lockFileDirectory = File(project.getPrebuiltsRoot(), "androidx/javascript-for-kotlin")
-        it.yarnLockMismatchReport = YarnLockMismatchReport.FAIL
+    rootProject.extensions.findByType(YarnRootExtension::class.java)?.let { yarn ->
+        yarn.version = getVersionByName("yarn")
+        yarn.yarnLockMismatchReport = YarnLockMismatchReport.FAIL
+        if (!ProjectLayoutType.isPlayground(this)) {
+            yarn.lockFileDirectory =
+                File(project.getPrebuiltsRoot(), "androidx/javascript-for-kotlin")
+        }
     }
 }
 
