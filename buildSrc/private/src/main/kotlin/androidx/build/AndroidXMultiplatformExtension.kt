@@ -763,7 +763,7 @@ private fun Project.configureNode() {
 }
 
 private fun Project.configureKotlinJsTests() {
-    if (System.getenv("CHROME_BIN") != null) {
+    if (ProjectLayoutType.isPlayground(this)) {
         return
     }
     val unzipChromeBuildServiceProvider =
