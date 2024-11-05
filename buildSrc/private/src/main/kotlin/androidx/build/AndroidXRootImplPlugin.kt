@@ -169,7 +169,7 @@ abstract class AndroidXRootImplPlugin : Plugin<Project> {
     private fun Project.configureTasksForKotlinWeb() {
         val offlineMirrorStorage =
             if (ProjectLayoutType.isPlayground(this)) {
-                layout.buildDirectory.dir("javascript-for-playground").get().asFile
+                layout.buildDirectory.dir("javascript-for-playground").get().asFile.mkdirs()
             } else {
                 File(getPrebuiltsRoot(), "androidx/javascript-for-kotlin")
             }
