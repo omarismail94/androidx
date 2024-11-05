@@ -774,20 +774,24 @@ private fun Project.configureNode() {
 }
 
 private fun Project.configureKotlinJsTests() {
-    if (ProjectLayoutType.isPlayground(this)) {
-        return
-    }
-    val unzipChromeBuildServiceProvider =
-        gradle.sharedServices.registrations.getByName("unzipChrome").service
+    val chromeEnvVar = "CHROME_BIN"
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->
-        task.usesService(unzipChromeBuildServiceProvider)
-        // Remove doFirst and switch to FileProperty property to set browser path when issue
-        // https://youtrack.jetbrains.com/issue/KT-72514 is resolved
-        task.doFirst {
-            task.environment(
-                "CHROME_BIN",
-                (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
-            )
+        if (ProjectLayoutType.isPlayground(this)) {
+            // Remove doFirst and switch to FileProperty property to set browser path when issue
+            // https://youtrack.jetbrains.com/issue/KT-72514 is resolved
+            task.doFirst { task.environment(chromeEnvVar, System.getenv(chromeEnvVar)) }
+        } else {
+            val unzipChromeBuildServiceProvider =
+                gradle.sharedServices.registrations.getByName("unzipChrome").service
+            task.usesService(unzipChromeBuildServiceProvider)
+            // Remove doFirst and switch to FileProperty property to set browser path when issue
+            // https://youtrack.jetbrains.com/issue/KT-72514 is resolved
+            task.doFirst {
+                task.environment(
+                    chromeEnvVar,
+                    (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
+                )
+            }
         }
     }
 }
