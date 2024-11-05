@@ -47,7 +47,7 @@ runs:
         set -x
         echo "DIST_DIR=$HOME/dist" >> $GITHUB_ENV
 
-    - name: "Download Chrome"
+    - name: "Download Chrome for testing"
       uses: browser-actions/setup-chrome@v1
       id: setup-chrome
       with:
