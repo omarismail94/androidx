@@ -694,11 +694,7 @@ open class AndroidXMultiplatformExtension(val project: Project) {
         browser {
             testTask {
                 it.useKarma {
-                    if (ProjectLayoutType.isPlayground(project)) {
-                        useChromeHeadlessNoSandbox()
-                    } else {
-                        useChromeHeadless()
-                    }
+                    useChromeHeadless()
                     useConfigDirectory(File(project.getSupportRootFolder(), "buildSrc/karmaconfig"))
                 }
             }
@@ -774,20 +770,30 @@ private fun Project.configureNode() {
 }
 
 private fun Project.configureKotlinJsTests() {
-    if (ProjectLayoutType.isPlayground(this)) {
-        return
-    }
-    val unzipChromeBuildServiceProvider =
-        gradle.sharedServices.registrations.getByName("unzipChrome").service
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->
-        task.usesService(unzipChromeBuildServiceProvider)
-        // Remove doFirst and switch to FileProperty property to set browser path when issue
-        // https://youtrack.jetbrains.com/issue/KT-72514 is resolved
-        task.doFirst {
-            task.environment(
-                "CHROME_BIN",
-                (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
-            )
+        task.testLogging.showStandardStreams = true
+        task.nodeJsArgs.addAll(listOf("--trace-uncaught", "--track-heap-objects", "--trace-exit"))
+
+        task.testLogging {
+            it.events("started", "passed", "skipped", "failed", "standardOut", "standardError")
+            it.exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            it.showExceptions = true
+            it.showCauses = true
+            it.showStackTraces = true
+        }
+
+        if (!ProjectLayoutType.isPlayground(this)) {
+            val unzipChromeBuildServiceProvider =
+                gradle.sharedServices.registrations.getByName("unzipChrome").service
+            task.usesService(unzipChromeBuildServiceProvider)
+            // Remove doFirst and switch to FileProperty property to set browser path when issue
+            // https://youtrack.jetbrains.com/issue/KT-72514 is resolved
+            task.doFirst {
+                task.environment(
+                    "CHROME_BIN",
+                    (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
+                )
+            }
         }
     }
 }
