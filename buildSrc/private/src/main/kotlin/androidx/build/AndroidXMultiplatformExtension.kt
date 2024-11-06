@@ -694,7 +694,11 @@ open class AndroidXMultiplatformExtension(val project: Project) {
         browser {
             testTask {
                 it.useKarma {
-                    useChromeHeadless()
+                    if (ProjectLayoutType.isPlayground(project)) {
+                        useChromeHeadlessNoSandbox()
+                    } else {
+                        useChromeHeadless()
+                    }
                     useConfigDirectory(File(project.getSupportRootFolder(), "buildSrc/karmaconfig"))
                 }
             }
