@@ -783,7 +783,7 @@ private fun Project.configureKotlinJsTests() =
                     (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
                 )
             }
-        } 
+        }
     }
 
 fun Project.validatePublishedMultiplatformHasDefault() {
