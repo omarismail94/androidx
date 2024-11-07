@@ -771,8 +771,6 @@ private fun Project.configureNode() {
 
 private fun Project.configureKotlinJsTests() {
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->
-        task.nodeJsArgs.addAll(listOf("--trace-uncaught", "--track-heap-objects", "--trace-exit"))
-
         if (!ProjectLayoutType.isPlayground(this)) {
             val unzipChromeBuildServiceProvider =
                 gradle.sharedServices.registrations.getByName("unzipChrome").service

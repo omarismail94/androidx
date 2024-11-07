@@ -90,4 +90,4 @@ runs:
         GRADLE_ENCRYPTION_KEY: ${{ inputs.gradle-encryption-key }}
       working-directory: ${{ inputs.project-root }}
       shell: bash
-      run: ./gradlew playgroundCIHostTests ${{ inputs.gradle-flags }} --info
+      run: ./gradlew playgroundCIHostTests ${{ inputs.gradle-flags }}
