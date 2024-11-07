@@ -769,7 +769,7 @@ private fun Project.configureNode() {
     }
 }
 
-private fun Project.configureKotlinJsTests() {
+private fun Project.configureKotlinJsTests() =
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->
         if (!ProjectLayoutType.isPlayground(this)) {
             val unzipChromeBuildServiceProvider =
@@ -783,9 +783,11 @@ private fun Project.configureKotlinJsTests() {
                     (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
                 )
             }
+        } else {
+            // TODO(b/377864260): Re-enable for Playground projects
+            task.enabled = false
         }
     }
-}
 
 fun Project.validatePublishedMultiplatformHasDefault() {
     val extension = project.extensions.getByType(AndroidXMultiplatformExtension::class.java)
