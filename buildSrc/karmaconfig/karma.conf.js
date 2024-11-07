@@ -16,7 +16,7 @@ config.set({
 })
 
 // https://karma-runner.github.io/6.4/config/configuration-file.html
-const connectTimeout = 180000
+const connectTimeout = 600000
 config.captureTimeout = connectTimeout
 config.browserSocketTimeout = connectTimeout
-config.logLevel = config.LOG_DEBUG
+config.concurrency = 4
