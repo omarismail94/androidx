@@ -19,3 +19,4 @@ config.set({
 const connectTimeout = 180000
 config.captureTimeout = connectTimeout
 browserSocketTimeout = connectTimeout
+config.logLevel = config.LOG_DEBUG
