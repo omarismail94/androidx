@@ -771,16 +771,7 @@ private fun Project.configureNode() {
 
 private fun Project.configureKotlinJsTests() {
     tasks.withType(KotlinJsTest::class.java).configureEach { task ->
-        task.testLogging.showStandardStreams = true
         task.nodeJsArgs.addAll(listOf("--trace-uncaught", "--track-heap-objects", "--trace-exit"))
-
-        task.testLogging {
-            it.events("started", "passed", "skipped", "failed", "standardOut", "standardError")
-            it.exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            it.showExceptions = true
-            it.showCauses = true
-            it.showStackTraces = true
-        }
 
         if (!ProjectLayoutType.isPlayground(this)) {
             val unzipChromeBuildServiceProvider =
