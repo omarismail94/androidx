@@ -82,6 +82,7 @@ import androidx.compose.ui.layout.MeasurePolicy
 import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalAutofillManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -311,6 +312,7 @@ internal fun CoreTextField(
     manager.clipboardManager = LocalClipboardManager.current
     manager.textToolbar = LocalTextToolbar.current
     manager.hapticFeedBack = LocalHapticFeedback.current
+    manager.autofillManager = LocalAutofillManager.current
     manager.focusRequester = focusRequester
     manager.editable = !readOnly
     manager.enabled = enabled
@@ -650,17 +652,17 @@ internal fun CoreTextField(
             imeAction = imeOptions.imeAction,
         )
 
+    val handwritingEnabled =
+        imeOptions.keyboardType != KeyboardType.Password &&
+            imeOptions.keyboardType != KeyboardType.NumberPassword
     val stylusHandwritingModifier =
-        Modifier.stylusHandwriting(writeable) {
+        Modifier.stylusHandwriting(writeable, handwritingEnabled) {
             // If this is a password field, we can't trigger handwriting.
             // The expected behavior is 1) request focus 2) show software keyboard.
             // Note: TextField will show software keyboard automatically when it
             // gain focus. 3) show a toast message telling that handwriting is not
             // supported for password fields. TODO(b/335294152)
-            if (
-                imeOptions.keyboardType != KeyboardType.Password &&
-                    imeOptions.keyboardType != KeyboardType.NumberPassword
-            ) {
+            if (handwritingEnabled) {
                 // TextInputService is calling LegacyTextInputServiceAdapter under the
                 // hood.  And because it's a public API, startStylusHandwriting is added
                 // to legacyTextInputServiceAdapter instead.

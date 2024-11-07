@@ -19,12 +19,14 @@ package androidx.pdf.viewer.fragment
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.annotation.RequiresExtension
 import androidx.annotation.RestrictTo
 import androidx.core.os.BundleCompat
 import androidx.core.view.ViewCompat
@@ -98,6 +100,7 @@ import kotlinx.coroutines.launch
  *
  * @see documentUri
  */
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 13)
 public open class PdfViewerFragment : Fragment() {
 
     // ViewModel to manage PdfLoader state
@@ -151,7 +154,6 @@ public open class PdfViewerFragment : Fragment() {
     private var annotationButton: FloatingActionButton? = null
     private var fileData: DisplayData? = null
     private var isFileRestoring: Boolean = false
-    private var shouldRedrawOnDocumentLoaded = false
     private var isAnnotationIntentResolvable = false
     private var documentLoaded = false
 
@@ -356,9 +358,6 @@ public open class PdfViewerFragment : Fragment() {
                 onDocumentLoaded = {
                     documentLoaded = true
                     onLoadDocumentSuccess()
-                    if (shouldRedrawOnDocumentLoaded) {
-                        shouldRedrawOnDocumentLoaded = false
-                    }
                     annotationButton?.let {
                         if ((savedInstanceState == null) && isAnnotationIntentResolvable) {
                             onRequestImmersiveMode(false)

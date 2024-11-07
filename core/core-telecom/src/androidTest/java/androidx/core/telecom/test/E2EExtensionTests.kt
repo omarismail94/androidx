@@ -58,6 +58,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Assume.assumeTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -413,7 +414,12 @@ class E2EExtensionTests(private val parameters: TestParameters) : BaseTelecomTes
      * This is an end to end test that verifies a VoIP application and InCallService can add the
      * LocalCallSilenceExtension and toggle the value.
      */
+    @SdkSuppress(
+        minSdkVersion = VERSION_CODES.O,
+        maxSdkVersion = VERSION_CODES.TIRAMISU
+    ) // TODO:: b/377707977
     @LargeTest
+    @Ignore("b/377706280")
     @Test(timeout = 10000)
     fun testVoipAndIcsTogglingTheLocalCallSilenceExtension(): Unit = runBlocking {
         usingIcs { ics ->
