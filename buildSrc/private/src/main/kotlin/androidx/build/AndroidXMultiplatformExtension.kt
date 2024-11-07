@@ -783,10 +783,7 @@ private fun Project.configureKotlinJsTests() =
                     (unzipChromeBuildServiceProvider.get() as UnzipChromeBuildService).chromePath
                 )
             }
-        } else {
-            // TODO(b/377864260): Re-enable for Playground projects
-            task.enabled = false
-        }
+        } 
     }
 
 fun Project.validatePublishedMultiplatformHasDefault() {

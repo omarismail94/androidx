@@ -47,13 +47,6 @@ runs:
         set -x
         echo "DIST_DIR=$HOME/dist" >> $GITHUB_ENV
 
-    - name: "Download Chrome for testing"
-      uses: browser-actions/setup-chrome@v1
-      id: setup-chrome
-      with:
-        chrome-version: 'stable'
-        install-dependencies: true
-
     - name: "Setup Gradle"
       uses: gradle/gradle-build-action@v3-beta
       with:
@@ -83,7 +76,6 @@ runs:
       run: ./gradlew buildOnServer zipTestConfigsWithApks ${{ inputs.gradle-flags }}
     - name: "gradle playgroundCIHostTests"
       env:
-        CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
         JAVA_HOME: ${{ steps.setup-java.outputs.path }}
         GRADLE_BUILD_CACHE_PASSWORD: ${{ inputs.gradle-cache-password }}
         GRADLE_ENTERPRISE_ACCESS_KEY: ${{ inputs.gradle-enterprise-access-key }}
